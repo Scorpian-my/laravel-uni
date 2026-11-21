@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سیستم مدیریت وظایف — API</title>
+    <title>کتاب باز — مستندات API</title>
     <style>
         :root { --bg:#0f172a; --panel:#1e293b; --line:#334155; --accent:#38bdf8; --text:#e2e8f0; --muted:#94a3b8; --ok:#4ade80; --bad:#f87171; }
         * { box-sizing: border-box; }
@@ -41,8 +41,8 @@
 <body>
 <div class="wrap">
     <header>
-        <h1>🗂️ سیستم مدیریت وظایف</h1>
-        <p>یک API ساختهشده با Laravel 13 + احراز هویت Sanctum — شامل دو CRUD و توکن</p>
+        <h1>📚 کتاب باز — مستندات API</h1>
+        <p>فروشگاه کتاب با Laravel 13 + احراز هویت Sanctum — شامل دو CRUD و توکن</p>
         <div class="badges">
             <span class="badge">Laravel 13</span>
             <span class="badge">PHP 8.5</span>
@@ -63,8 +63,8 @@
         <div class="card">
             <h2>📊 ساختار پروژه</h2>
             <div class="kv"><span>احراز هویت</span><span>AuthController + Sanctum</span></div>
-            <div class="kv"><span>CRUD شماره ۱</span><span>Categories</span></div>
-            <div class="kv"><span>CRUD شماره ۲</span><span>Tasks</span></div>
+            <div class="kv"><span>CRUD شماره ۱</span><span>دستهبندیها (Categories)</span></div>
+            <div class="kv"><span>CRUD شماره ۲</span><span>کتابها (Tasks)</span></div>
             <div class="kv"><span>امنیت</span><span>Policy + 404 برای کاربر دیگه</span></div>
             <div class="kv"><span>خروجی</span><span>API Resource</span></div>
         </div>

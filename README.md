@@ -1,58 +1,165 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 📚 کتاب باز — فروشگاه کتاب (Laravel API)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+فروشگاه کتابی ساختهشده با **Laravel 13** که سه تمرین استاد را در یک پروژه ترکیب میکند:
+دو **CRUD** (مدیریت دیتابیس) + یک **احراز هویت با توکن** (Sanctum).
 
-## About Laravel
+همه اندپوینتها از طریق صفحه اصلی سایت (`/`) هم قابل استفادهاند: لیست کتابها، فیلتر دستهبندی، سبد خرید، ثبت سفارش و پنل کامل ادمین.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🎯 نقشه تسکها
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+| تسک استاد | پیادهمسازی در پروژه |
+|---|---|
+| CRUD شماره ۱ | `categories` — ایجاد / لیست / ویرایش / حذف دستهبندی |
+| CRUD شماره ۲ | `tasks` — ایجاد / لیست / ویرایش / حذف کتاب (با فیلتر بر اساس دسته) |
+| احراز هویت با توکن | `laravel/sanctum` — ثبتنام، ورود، خروج و محافظت از تمام روتها |
 
-## Learning Laravel
+هر دو CRUD پشت `auth:sanctum` قرار دارند و هر کاربر فقط رکوردهای خودش را میبیند.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🛠️ تکنولوژیها
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+- PHP 8.5 / Laravel 13
+- Sanctum 4 (Personal Access Token)
+- SQLite (قابل تعویض با MySQL)
+- Eloquent API Resource + Form Request + Policy
+- PHPUnit 12 (۳۳ تست)
+- Laravel Pint (فرمت کد)
+- واسطه کاربری تکصفحهای (Vanilla JS) بدون نیاز به Vite
 
-## Agentic Development
+---
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## 🚀 نصب و اجرا
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate --seed
+php artisan serve
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+سپس:
 
-## Contributing
+| آدرس | توضیح |
+|---|---|
+| `http://127.0.0.1:8000/` | صفحه فروشگاه |
+| `http://127.0.0.1:8000/docs` | مستندات اندپوینتها |
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+> حساب تست: `test@example.com` / `password`
+> (صفحه فروشگاه به صورت خودکار با این حساب وارد میشود)
 
-## Code of Conduct
+### اجرای تستها
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+php artisan test --compact
+vendor/bin/pint --format agent
+```
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## 📡 اندپوینتهای API
 
-## License
+پایه آدرس: `/api`
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### احراز هویت
+
+| متد | مسیر | توضیح |
+|---|---|---|
+| POST | `/register` | ثبتنام و صدور توکن |
+| POST | `/login` | ورود و صدور توکن |
+| POST | `/logout` | باطلکردن توکن فعلی 🔒 |
+
+### دستهبندیها 🔒
+
+| متد | مسیر | توضیح |
+|---|---|---|
+| GET | `/categories` | لیست دستههای من |
+| POST | `/categories` | ایجاد دسته |
+| GET | `/categories/{id}` | نمایش دسته |
+| PUT | `/categories/{id}` | ویرایش دسته |
+| DELETE | `/categories/{id}` | حذف دسته (همراه کتابهایش) |
+
+### کتابها 🔒
+
+| متد | مسیر | توضیح |
+|---|---|---|
+| GET | `/tasks` | لیست کتابها (`?category_id=` هم میپذیرد) |
+| POST | `/tasks` | ایجاد کتاب |
+| GET | `/tasks/{id}` | نمایش کتاب |
+| PUT | `/tasks/{id}` | ویرایش کتاب (کسر موجودی موقع خرید هم از همینجا است) |
+| DELETE | `/tasks/{id}` | حذف کتاب |
+
+🔒 = نیاز به هدر `Authorization: Bearer <token>`
+
+### مثال درخواست
+
+```powershell
+$login = Invoke-RestMethod "http://127.0.0.1:8000/api/login" -Method Post `
+  -ContentType "application/json" `
+  -Body '{"email":"test@example.com","password":"password"}'
+
+$h = @{ Authorization = "Bearer $($login.token)" }
+Invoke-RestMethod "http://127.0.0.1:8000/api/tasks" -Headers $h
+```
+
+---
+
+## 🗂️ ساختار دیتابیس
+
+```
+users
+  id, name, email, password
+
+categories
+  id, user_id (FK → users, cascade), name, timestamps
+
+tasks  (کتابها)
+  id, user_id (FK → users, cascade)
+  category_id (FK → categories, cascade)
+  title, price, stock, image, description, is_done, timestamps
+
+personal_access_tokens   (Sanctum)
+```
+
+---
+
+## 🧱 ساختار کد
+
+```
+app/
+├── Http/
+│   ├── Controllers/Api/   AuthController, CategoryController, TaskController
+│   ├── Requests/          StoreCategoryRequest, StoreTaskRequest, UpdateTaskRequest
+│   └── Resources/         CategoryResource, TaskResource
+├── Models/                User, Category, Task
+├── Policies/              CategoryPolicy, TaskPolicy
+└── Providers/             AppServiceProvider (rate-limit ورود + Resource بدون data wrapper)
+routes/
+├── api.php                ۱۳ روت API
+└── web.php                / (فروشگاه) و /docs (مستندات)
+resources/views/
+├── shop.blade.php         رابط فروشگاه
+└── home.blade.php         صفحه مستندات
+tests/Feature/…            تستهای احراز هویت، CRUD، Policy و سناریوهای 404
+database/seeders/          دیتای نمونه: ۳ دسته + ۹ کتاب
+```
+
+### نکات امنیتی پیادهمشده
+
+- تمام روتهای CRUD پشت `auth:sanctum`اند.
+- Policyها دسترسی کاربر دیگر را با **404** رد میکنند (وجود رکورد لو نمیرود).
+- `category_id` هنگام ایجاد کتاب فقط در صورتی معتبر است که متعلق به کاربر جاری باشد.
+- مالکیت رکوردها با `user_id` در کوئریها محدود شده است.
+- ورود و ثبتنام دارای rate-limit (`throttle:login`)اند.
+
+---
+
+## 📦 وضعیت فعلی
+
+- ✅ ۳۳ تست / ۹۵ assertion — همه پاس
+- ✅ Pint تمیز
+- ✅ فونت Vazirmatn در رابط کاربری
+- ✅ گیت آماده و پوششدهشده در `origin/main`
