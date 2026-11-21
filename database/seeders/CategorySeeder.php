@@ -18,7 +18,7 @@ class CategorySeeder extends Seeder
     {
         $user = User::where('email', 'test@example.com')->firstOrFail();
 
-        foreach (['رمان و داستان', 'کتاب فنی', 'کتاب کودک'] as $name) {
+        foreach (['ایرانایر', 'ماهان ایر', 'زاگرس ایر'] as $name) {
             Category::factory()->create([
                 'user_id' => $user->id,
                 'name' => $name,

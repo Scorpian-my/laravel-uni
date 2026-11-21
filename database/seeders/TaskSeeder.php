@@ -19,32 +19,39 @@ class TaskSeeder extends Seeder
     {
         $user = User::where('email', 'test@example.com')->firstOrFail();
 
-        $books = [
-            'رمان و داستان' => [
-                ['هزار و یک شب', 185000, 12],
-                ['بوف کور', 145000, 8],
-                ['کلیدر', 320000, 5],
+        $flights = [
+            'ایرانایر' => [
+                ['تهران', 'مشهد', 'IR310', 1850000, 42, 1, 8],
+                ['تهران', 'شیراز', 'IR425', 1520000, 30, 2, 11],
+                ['تهران', 'اصفهان', 'IR510', 980000, 55, 3, 14],
             ],
-            'کتاب فنی' => [
-                ['لاراول عملی', 380000, 25],
-                ['کد تمیز', 290000, 18],
-                ['الگوهای طراحی', 420000, 10],
+            'ماهان ایر' => [
+                ['تهران', 'کیش', 'W5112', 2450000, 18, 1, 10],
+                ['تهران', 'دبی', 'W578', 6900000, 12, 4, 7],
+                ['مشهد', 'کیش', 'W5450', 2100000, 25, 5, 13],
             ],
-            'کتاب کودک' => [
-                ['قصههای شبانه', 95000, 30],
-                ['دنیای حیوانات', 120000, 22],
-                ['الفبای شاد', 75000, 40],
+            'زاگرس ایر' => [
+                ['تهران', 'تبریز', 'ZP210', 1150000, 35, 2, 9],
+                ['تهران', 'بندرعباس', 'ZP340', 1780000, 20, 6, 12],
+                ['شیراز', 'اهواز', 'ZP415', 850000, 40, 7, 16],
             ],
         ];
 
-        foreach ($books as $categoryName => $items) {
-            $category = Category::whereBelongsTo($user)->where('name', $categoryName)->firstOrFail();
+        foreach ($flights as $airlineName => $items) {
+            $airline = Category::whereBelongsTo($user)->where('name', $airlineName)->firstOrFail();
 
-            foreach ($items as [$title, $price, $stock]) {
+            foreach ($items as [$origin, $destination, $number, $price, $stock, $days, $hour]) {
+                $departure = now()->addDays($days)->setTime($hour, 0);
+
                 Task::factory()->create([
                     'user_id' => $user->id,
-                    'category_id' => $category->id,
-                    'title' => $title,
+                    'category_id' => $airline->id,
+                    'title' => $origin.' → '.$destination,
+                    'origin' => $origin,
+                    'destination' => $destination,
+                    'departure_at' => $departure,
+                    'arrival_at' => $departure->copy()->addHours(2),
+                    'flight_number' => $number,
                     'price' => $price,
                     'stock' => $stock,
                 ]);

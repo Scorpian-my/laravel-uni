@@ -25,6 +25,11 @@ class StoreTaskRequest extends FormRequest
     {
         return [
             'title' => ['required', 'string', 'max:255'],
+            'origin' => ['nullable', 'string', 'max:255'],
+            'destination' => ['nullable', 'string', 'max:255'],
+            'departure_at' => ['nullable', 'date'],
+            'arrival_at' => ['nullable', 'date', 'after_or_equal:departure_at'],
+            'flight_number' => ['nullable', 'string', 'max:50'],
             'price' => ['sometimes', 'numeric', 'min:0'],
             'stock' => ['sometimes', 'integer', 'min:0'],
             'image' => ['nullable', 'string', 'max:2048'],

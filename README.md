@@ -1,9 +1,9 @@
-# 📚 کتاب باز — فروشگاه کتاب (Laravel API)
+# ✈️ بلیط آسمان — سایت رزرو بلیط هواپیما
 
-فروشگاه کتابی ساختهشده با **Laravel 13** که سه تمرین استاد را در یک پروژه ترکیب میکند:
+سازگارشده از پروژه قبلی: یک سایت فروش بلیط هواپیما با **Laravel 13** که سه تمرین استاد را در کنار هم پیاده میکند:
 دو **CRUD** (مدیریت دیتابیس) + یک **احراز هویت با توکن** (Sanctum).
 
-همه اندپوینتها از طریق صفحه اصلی سایت (`/`) هم قابل استفادهاند: لیست کتابها، فیلتر دستهبندی، سبد خرید، ثبت سفارش و پنل کامل ادمین.
+رابط کاربری تکصفحهای سایت شامل جستجوی پرواز (مبدأ / مقصد / تاریخ)، فیلتر شرکت هواپیمایی، جزئیات پرواز، سبد بلیت و ثبت رزرو است. تمام ۱۳ اندپوینت API از همین صفحه صدا زده میشوند.
 
 ---
 
@@ -11,11 +11,9 @@
 
 | تسک استاد | پیادهمسازی در پروژه |
 |---|---|
-| CRUD شماره ۱ | `categories` — ایجاد / لیست / ویرایش / حذف دستهبندی |
-| CRUD شماره ۲ | `tasks` — ایجاد / لیست / ویرایش / حذف کتاب (با فیلتر بر اساس دسته) |
+| CRUD شماره ۱ | `categories` — ایجاد / لیست / ویرایش / حذف **شرکت هواپیمایی** |
+| CRUD شماره ۲ | `tasks` — ایجاد / لیست / ویرایش / حذف **پرواز** (با فیلتر بر اساس شرکت) |
 | احراز هویت با توکن | `laravel/sanctum` — ثبتنام، ورود، خروج و محافظت از تمام روتها |
-
-هر دو CRUD پشت `auth:sanctum` قرار دارند و هر کاربر فقط رکوردهای خودش را میبیند.
 
 ---
 
@@ -23,11 +21,10 @@
 
 - PHP 8.5 / Laravel 13
 - Sanctum 4 (Personal Access Token)
-- SQLite (قابل تعویض با MySQL)
+- SQLite
 - Eloquent API Resource + Form Request + Policy
-- PHPUnit 12 (۳۳ تست)
-- Laravel Pint (فرمت کد)
-- واسطه کاربری تکصفحهای (Vanilla JS) بدون نیاز به Vite
+- PHPUnit 12 (۳۳ تست) + Laravel Pint
+- رابط کاربری Vanilla JS بدون نیاز به Vite — فونت Vazirmatn
 
 ---
 
@@ -41,17 +38,12 @@ php artisan migrate --seed
 php artisan serve
 ```
 
-سپس:
-
 | آدرس | توضیح |
 |---|---|
-| `http://127.0.0.1:8000/` | صفحه فروشگاه |
+| `http://127.0.0.1:8000/` | سایت رزرو بلیط |
 | `http://127.0.0.1:8000/docs` | مستندات اندپوینتها |
 
-> حساب تست: `test@example.com` / `password`
-> (صفحه فروشگاه به صورت خودکار با این حساب وارد میشود)
-
-### اجرای تستها
+حساب تست: `test@example.com` / `password` (ورود اولیه به صورت خودکار است).
 
 ```bash
 php artisan test --compact
@@ -64,37 +56,23 @@ vendor/bin/pint --format agent
 
 پایه آدرس: `/api`
 
-### احراز هویت
-
 | متد | مسیر | توضیح |
 |---|---|---|
-| POST | `/register` | ثبتنام و صدور توکن |
-| POST | `/login` | ورود و صدور توکن |
+| POST | `/register` | ثبتنام + توکن |
+| POST | `/login` | ورود + توکن |
 | POST | `/logout` | باطلکردن توکن فعلی 🔒 |
-
-### دستهبندیها 🔒
-
-| متد | مسیر | توضیح |
-|---|---|---|
-| GET | `/categories` | لیست دستههای من |
-| POST | `/categories` | ایجاد دسته |
-| GET | `/categories/{id}` | نمایش دسته |
-| PUT | `/categories/{id}` | ویرایش دسته |
-| DELETE | `/categories/{id}` | حذف دسته (همراه کتابهایش) |
-
-### کتابها 🔒
-
-| متد | مسیر | توضیح |
-|---|---|---|
-| GET | `/tasks` | لیست کتابها (`?category_id=` هم میپذیرد) |
-| POST | `/tasks` | ایجاد کتاب |
-| GET | `/tasks/{id}` | نمایش کتاب |
-| PUT | `/tasks/{id}` | ویرایش کتاب (کسر موجودی موقع خرید هم از همینجا است) |
-| DELETE | `/tasks/{id}` | حذف کتاب |
+| GET | `/categories` | لیست شرکتهای هواپیمایی 🔒 |
+| POST | `/categories` | ایجاد شرکت 🔒 |
+| GET | `/categories/{id}` | نمایش شرکت 🔒 |
+| PUT | `/categories/{id}` | ویرایش شرکت 🔒 |
+| DELETE | `/categories/{id}` | حذف شرکت (همراه پروازهایش) 🔒 |
+| GET | `/tasks` | لیست پروازها (`?category_id=` فیلتر بر اساس شرکت) 🔒 |
+| POST | `/tasks` | ایجاد پرواز 🔒 |
+| GET | `/tasks/{id}` | نمایش پرواز 🔒 |
+| PUT | `/tasks/{id}` | ویرایش پرواز / کسر صندلی هنگام رزرو 🔒 |
+| DELETE | `/tasks/{id}` | حذف پرواز 🔒 |
 
 🔒 = نیاز به هدر `Authorization: Bearer <token>`
-
-### مثال درخواست
 
 ```powershell
 $login = Invoke-RestMethod "http://127.0.0.1:8000/api/login" -Method Post `
@@ -107,22 +85,25 @@ Invoke-RestMethod "http://127.0.0.1:8000/api/tasks" -Headers $h
 
 ---
 
-## 🗂️ ساختار دیتابیس
+## 🗂️ دیتابیس
 
 ```
 users
   id, name, email, password
 
-categories
+categories  (شرکتهای هواپیمایی)
   id, user_id (FK → users, cascade), name, timestamps
 
-tasks  (کتابها)
+tasks  (پروازها)
   id, user_id (FK → users, cascade)
   category_id (FK → categories, cascade)
-  title, price, stock, image, description, is_done, timestamps
+  title, origin, destination, departure_at, arrival_at, flight_number
+  price, stock, image, description, is_done, timestamps
 
 personal_access_tokens   (Sanctum)
 ```
+
+دیتای نمونه: ۳ شرکت هواپیمایی (ایرانایر، ماهان ایر، زاگرس ایر) + ۹ پرواز داخلی و خارجی.
 
 ---
 
@@ -130,36 +111,34 @@ personal_access_tokens   (Sanctum)
 
 ```
 app/
-├── Http/
-│   ├── Controllers/Api/   AuthController, CategoryController, TaskController
-│   ├── Requests/          StoreCategoryRequest, StoreTaskRequest, UpdateTaskRequest
-│   └── Resources/         CategoryResource, TaskResource
-├── Models/                User, Category, Task
-├── Policies/              CategoryPolicy, TaskPolicy
-└── Providers/             AppServiceProvider (rate-limit ورود + Resource بدون data wrapper)
+├── Http/Controllers/Api/   AuthController, CategoryController, TaskController
+├── Http/Requests/          StoreCategoryRequest, StoreTaskRequest, UpdateTaskRequest
+├── Http/Resources/         CategoryResource, TaskResource
+├── Models/                 User, Category, Task
+├── Policies/               CategoryPolicy, TaskPolicy
+└── Providers/              AppServiceProvider (rate-limit ورود + Resource بدون data wrapper)
 routes/
-├── api.php                ۱۳ روت API
-└── web.php                / (فروشگاه) و /docs (مستندات)
+├── api.php                 ۱۳ روت API
+└── web.php                 / (رزرو بلیط) و /docs (مستندات)
 resources/views/
-├── shop.blade.php         رابط فروشگاه
-└── home.blade.php         صفحه مستندات
-tests/Feature/…            تستهای احراز هویت، CRUD، Policy و سناریوهای 404
-database/seeders/          دیتای نمونه: ۳ دسته + ۹ کتاب
+├── shop.blade.php          رابط سایت
+└── home.blade.php          صفحه مستندات
+database/seeders/           دیتای نمونه پروازها
+tests/Feature/…             تستهای احراز هویت، CRUD، Policy و سناریوهای 404
 ```
 
-### نکات امنیتی پیادهمشده
+### امنیت
 
 - تمام روتهای CRUD پشت `auth:sanctum`اند.
-- Policyها دسترسی کاربر دیگر را با **404** رد میکنند (وجود رکورد لو نمیرود).
-- `category_id` هنگام ایجاد کتاب فقط در صورتی معتبر است که متعلق به کاربر جاری باشد.
-- مالکیت رکوردها با `user_id` در کوئریها محدود شده است.
-- ورود و ثبتنام دارای rate-limit (`throttle:login`)اند.
+- Policyها دسترسی کاربر دیگه را با **404** رد میکنند.
+- `category_id` هنگام ایجاد پرواز فقط زمانی معتبر است که متعلق به کاربر جاری باشد.
+- کوئریها با `user_id` محدود به مالک رکورداند.
+- ورود و ثبتنام دارای `throttle:login`اند.
 
 ---
 
-## 📦 وضعیت فعلی
+## ✅ وضعیت فعلی
 
-- ✅ ۳۳ تست / ۹۵ assertion — همه پاس
-- ✅ Pint تمیز
-- ✅ فونت Vazirmatn در رابط کاربری
-- ✅ گیت آماده و پوششدهشده در `origin/main`
+- ۳۳ تست / ۹۵ assertion — همه پاس
+- Pint تمیز
+- گیت متصل به `origin/main`
